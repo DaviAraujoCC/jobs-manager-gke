@@ -1,0 +1,184 @@
+basePath: /
+consumes:
+    - application/json
+    - form-data
+info:
+    description: Documentation for REST API
+    title: for the RESTful Server
+    version: 1.0.0
+paths:
+    /cronjobs:
+        get:
+            description: Get all cronjobs
+            operationId: getCronjobs
+            responses:
+                "200":
+                    $ref: '#/responses/CronjobsResponse'
+                "403":
+                    $ref: '#/responses/Unauthorized'
+                "500":
+                    $ref: '#/responses/ErrorMessage'
+            security:
+                - Bearer:
+                    - '[]'
+            tags:
+                - Cronjobs
+        post:
+            description: Start/Stop a cronjob by name
+            operationId: startCronjobByNamePost
+            parameters:
+                - description: Cronjob name
+                  in: query
+                  name: cronjobName
+                  required: true
+                  type: string
+                - description: Action to perform
+                  enum:
+                    - start
+                    - stop
+                  in: query
+                  name: action
+                  required: true
+                  type: string
+            responses:
+                "200":
+                    $ref: '#/responses/OK'
+                "400":
+                    $ref: '#/responses/BadRequest'
+                "403":
+                    $ref: '#/responses/Unauthorized'
+                "404":
+                    $ref: '#/responses/ErrorMessage'
+                "500":
+                    $ref: '#/responses/ErrorMessage'
+            security:
+                - Bearer:
+                    - '[]'
+            tags:
+                - Cronjobs
+        put:
+            deprecated: true
+            description: Start/Stop a cronjob by name
+            operationId: startCronjobByNamePut
+            parameters:
+                - description: Cronjob name
+                  in: query
+                  name: cronjobName
+                  required: true
+                  type: string
+                - description: Action to perform
+                  enum:
+                    - start
+                    - stop
+                  in: query
+                  name: action
+                  required: true
+                  type: string
+            responses:
+                "200":
+                    $ref: '#/responses/OK'
+                "400":
+                    $ref: '#/responses/BadRequest'
+                "403":
+                    $ref: '#/responses/Unauthorized'
+                "404":
+                    $ref: '#/responses/ErrorMessage'
+                "500":
+                    $ref: '#/responses/ErrorMessage'
+            security:
+                - Bearer:
+                    - '[]'
+            tags:
+                - Cronjobs
+    /cronjobs/{name}:
+        get:
+            description: Get a cronjob by name
+            operationId: getCronjobByName
+            parameters:
+                - description: CronJobs name
+                  in: path
+                  name: name
+                  required: true
+                  type: string
+            responses:
+                "200":
+                    $ref: '#/responses/CronjobsResponse'
+                "403":
+                    $ref: '#/responses/Unauthorized'
+                "404":
+                    $ref: '#/responses/ErrorMessage'
+                "500":
+                    $ref: '#/responses/ErrorMessage'
+            security:
+                - Bearer:
+                    - '[]'
+            tags:
+                - Cronjobs
+    /jobs:
+        get:
+            description: Get all jobs
+            operationId: getJobs
+            responses:
+                "200":
+                    $ref: '#/responses/JobsResponse'
+                "403":
+                    $ref: '#/responses/Unauthorized'
+                "500":
+                    $ref: '#/responses/ErrorMessage'
+            security:
+                - Bearer:
+                    - '[]'
+            tags:
+                - Jobs
+    /jobs/{name}:
+        get:
+            description: Get a job by name
+            operationId: getJobByName
+            parameters:
+                - description: Jobs name
+                  in: path
+                  name: name
+                  required: true
+                  type: string
+            responses:
+                "200":
+                    $ref: '#/responses/JobsResponse'
+                "400":
+                    $ref: '#/responses/BadRequest'
+                "403":
+                    $ref: '#/responses/Unauthorized'
+                "500":
+                    $ref: '#/responses/ErrorMessage'
+            security:
+                - Bearer:
+                    - '[]'
+            tags:
+                - Jobs
+produces:
+    - application/json
+responses:
+    BadRequest:
+        description: Generic BadRequest message returned as an HTTP Status Code
+    CronjobsResponse:
+        description: A list of Cronjobs
+    ErrorMessage:
+        description: Generic error message returned as an HTTP Status Code
+    JobsResponse:
+        description: A list of Jobs
+    OK:
+        description: Generic OK message returned as an HTTP Status Code
+    Unauthorized:
+        description: Generic Unauthorized message returned as an HTTP Status Code
+    noContent:
+        description: Generic noContent message returned as an HTTP Status Code
+schemes:
+    - http
+security:
+    - Bearer: []
+securityDefinitions:
+    Bearer:
+        description: 'Authorization header using the Bearer scheme. Example: "Authorization: Bearer {token}"'
+        in: header
+        name: Authorization
+        type: apiKey
+swagger: "2.0"

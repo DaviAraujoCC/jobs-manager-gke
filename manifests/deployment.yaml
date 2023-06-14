@@ -1,0 +1,50 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: jobs-manager
+  namespace: default
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: jobs-manager
+  template:
+    metadata:
+      labels:
+        app: jobs-manager
+    spec:
+      serviceAccountName: jobs-manager
+      containers:
+      - name: jobs-manager
+        image: gcr.io/repo/jobs-manager-gke:latest
+        env:
+        - name: LOG_LEVEL
+          value: "debug"
+        - name: HTTP_PORT
+          value: "8080"
+        - name: SECRET_KEY
+          valueFrom:
+            secretKeyRef:
+              name: jobs-manager-auth
+              key: secret.key
+        imagePullPolicy: Always
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: jobs-manager
+  namespace: default
+  annotations:
+    cloud.google.com/load-balancer-type: "Internal"
+    networking.gke.io/internal-load-balancer-allow-global-access: "true"
+spec:
+  selector:
+    app: jobs-manager
+  ports:
+  - protocol: TCP
+    port: 80
+    targetPort: 8080
+  type: LoadBalancer
+
